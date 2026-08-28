@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#05070b">
   <title>Sunscape</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='sunscape.css') }}">
 </head>
-<body>
+<body class="landing">
   <main class="shell">
     <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
     <header class="topbar"><div class="brand"><span class="brand-orbit"></span>SUNSCAPE</div><div class="status-pill"><span></span> LIVE WEATHER MODEL</div></header>
@@ -20,6 +21,7 @@
           <input id="query" placeholder="Search city or postcode" aria-label="Search city or postcode">
           <button id="search-button">SCAN SKY</button>
         </form>
+        <button class="location-button" id="location-button" type="button"><span>◎</span><span id="location-label">Use my location</span></button>
         <p class="error" id="error" hidden></p>
         <div class="results" id="results" hidden></div>
       </div>
