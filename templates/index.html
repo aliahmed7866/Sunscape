@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#05070b">
   <title>Sunscape</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='sunscape.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='ui-polish.css') }}">
 </head>
 <body class="landing">
   <main class="shell">
@@ -18,7 +19,7 @@
         <p class="lede">Sunrise and sunset potential scored from cloud altitude, visibility, humidity and precipitation using free forecast data.</p>
         <form class="search" id="search-form">
           <span class="search-icon">⌖</span>
-          <input id="query" placeholder="Search city or postcode" aria-label="Search city or postcode">
+          <input id="query" placeholder="Search city or postcode" aria-label="Search city or postcode" autocomplete="off">
           <button id="search-button">SCAN SKY</button>
         </form>
         <button class="location-button" id="location-button" type="button"><span>◎</span><span id="location-label">Use my location</span></button>
