@@ -42,6 +42,10 @@ chmod +x "$SERVICE_DIR/run"
 sv-enable sunscape >/dev/null 2>&1 || true
 sv up sunscape >/dev/null 2>&1 || true
 
+if [ -x "$APP_DIR/termux/install-boot.sh" ]; then
+  "$APP_DIR/termux/install-boot.sh"
+fi
+
 sleep 1
 if curl -fsS "http://127.0.0.1:$PORT/health" >/dev/null; then
   echo "[Sunscape] Running on http://127.0.0.1:$PORT"
