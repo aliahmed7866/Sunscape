@@ -7,6 +7,7 @@ function formatTime(value) { return new Date(value).toLocaleTimeString([], {hour
 function formatDay(value) { return new Date(`${value}T12:00:00`).toLocaleDateString(undefined,{weekday:'short'}).toUpperCase(); }
 function formatDate(value) { return new Date(`${value}T12:00:00`).toLocaleDateString(undefined,{month:'short',day:'numeric'}); }
 function showError(message='') { const el=$('error'); el.textContent=message; el.hidden=!message; }
+function setLocationBusy(busy,label='Use my location') { const b=$('location-button'); b.disabled=busy; $('location-label').textContent=busy?'Detecting location…':label; }
 
 async function searchPlaces(event) {
   event.preventDefault();
@@ -31,9 +32,39 @@ async function loadForecast(place) {
   finally { $('search-button').disabled=false; $('search-button').textContent='SCAN SKY'; }
 }
 
+function detectLocation({silent=false}={}) {
+  if (!navigator.geolocation) {
+    if (!silent) showError('Location detection is not supported by this browser.');
+    return;
+  }
+  setLocationBusy(true);
+  navigator.geolocation.getCurrentPosition(
+    async pos => {
+      const {latitude, longitude} = pos.coords;
+      const place = {name:'Current location', admin1:'GPS detected', country:'', latitude, longitude};
+      try {
+        await loadForecast(place);
+        $('query').value='Current location';
+        setLocationBusy(false,'Location detected');
+      } catch (_) {
+        setLocationBusy(false);
+      }
+    },
+    err => {
+      setLocationBusy(false);
+      if (!silent) {
+        const message = err.code===1 ? 'Location permission was denied.' : 'Could not detect your location.';
+        showError(message);
+      }
+    },
+    {enableHighAccuracy:false, timeout:8000, maximumAge:15*60*1000}
+  );
+}
+
 function metric(label,value){ return `<div class='metric'><span>${label}</span><strong>${value}</strong></div>`; }
 function render() {
   if(!state.place || !state.days.length) return;
+  document.body.classList.remove('landing');
   $('dashboard').hidden=false; $('teasers').hidden=true;
   $('place-name').textContent=state.place.name; $('place-meta').textContent=[state.place.admin1,state.place.country].filter(Boolean).join(', ');
   document.querySelectorAll('[data-event]').forEach(b=>b.classList.toggle('active',b.dataset.event===state.activeEvent));
@@ -51,7 +82,9 @@ function compact(icon,title,f){ return `<div class='compact-forecast'><div class
 
 document.addEventListener('DOMContentLoaded',()=>{
   $('search-form').addEventListener('submit',searchPlaces);
+  $('location-button').addEventListener('click',()=>detectLocation({silent:false}));
   $('results').addEventListener('click',e=>{const b=e.target.closest('[data-place]'); if(b) loadForecast($('results')._places[Number(b.dataset.place)]);});
   document.querySelector('.event-toggle').addEventListener('click',e=>{const b=e.target.closest('[data-event]'); if(b){state.activeEvent=b.dataset.event; render();}});
   $('day-strip').addEventListener('click',e=>{const b=e.target.closest('[data-day]'); if(b){state.activeDay=Number(b.dataset.day); render();}});
+  setTimeout(()=>detectLocation({silent:true}),250);
 });
