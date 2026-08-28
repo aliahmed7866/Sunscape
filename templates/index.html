@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sunscape</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='sunscape.css') }}">
+</head>
+<body>
+  <main class="shell">
+    <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
+    <header class="topbar"><div class="brand"><span class="brand-orbit"></span>SUNSCAPE</div><div class="status-pill"><span></span> LIVE WEATHER MODEL</div></header>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">ATMOSPHERIC LIGHT INTELLIGENCE</p>
+        <h1>Know when the sky is <em>worth chasing.</em></h1>
+        <p class="lede">Sunrise and sunset potential scored from cloud altitude, visibility, humidity and precipitation using free forecast data.</p>
+        <form class="search" id="search-form">
+          <span class="search-icon">⌖</span>
+          <input id="query" placeholder="Search city or postcode" aria-label="Search city or postcode">
+          <button id="search-button">SCAN SKY</button>
+        </form>
+        <p class="error" id="error" hidden></p>
+        <div class="results" id="results" hidden></div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="planet"><div class="planet-glow"></div><div class="horizon-line"></div><span class="star s1"></span><span class="star s2"></span><span class="star s3"></span></div>
+        <div class="radar-ring ring-1"></div><div class="radar-ring ring-2"></div><div class="radar-ring ring-3"></div>
+        <div class="telemetry t1">HIGH CLOUD · OPTIMAL</div><div class="telemetry t2">SOLAR ANGLE · TRACKING</div>
+      </div>
+    </section>
+
+    <section class="dashboard" id="dashboard" hidden>
+      <div class="section-head">
+        <div><p class="eyebrow">7-DAY SKY OUTLOOK</p><h2 id="place-name"></h2><p id="place-meta"></p></div>
+        <div class="event-toggle"><button data-event="sunrise">☼ Sunrise</button><button class="active" data-event="sunset">◐ Sunset</button></div>
+      </div>
+      <div class="featured-grid">
+        <article class="hero-score panel">
+          <div class="panel-kicker" id="event-kicker">SUNSET POTENTIAL</div>
+          <div class="score-orb">
+            <svg viewBox="0 0 140 140"><circle class="score-track" cx="70" cy="70" r="58"></circle><circle id="score-progress" class="score-progress" cx="70" cy="70" r="58"></circle></svg>
+            <div class="score-core"><strong id="score-value">0</strong><span>/100</span><small id="score-label"></small></div>
+          </div>
+          <div class="event-time" id="event-time"></div><p class="reason" id="reason"></p><div class="signal-row"><span class="signal-dot"></span> Forecast signal acquired</div>
+        </article>
+        <article class="panel atmosphere-panel">
+          <div class="panel-head"><span>ATMOSPHERIC PROFILE</span><small>cloud layers</small></div>
+          <div class="cloud-profile" id="cloud-profile"></div>
+          <div class="environment-grid" id="metrics"></div>
+        </article>
+      </div>
+      <div class="timeline panel"><div class="panel-head"><span>FORECAST TIMELINE</span><small>tap a day to inspect</small></div><div class="day-strip" id="day-strip"></div></div>
+      <div class="forecast-grid" id="forecast-grid"></div>
+    </section>
+
+    <section class="feature-teasers" id="teasers">
+      <div><span>01</span><strong>Cloud layer analysis</strong><p>Low, mid and high cloud treated differently for colour potential.</p></div>
+      <div><span>02</span><strong>Visibility signal</strong><p>Atmospheric clarity helps estimate whether colour can travel across the horizon.</p></div>
+      <div><span>03</span><strong>Seven-day scan</strong><p>Compare upcoming dawns and dusks before deciding when to head out.</p></div>
+    </section>
+    <footer><span>SUNSCAPE / SKY MODEL V1</span><span>Powered by Open-Meteo · Predictions are heuristic</span></footer>
+  </main>
+  <script src="{{ url_for('static', filename='sunscape.js') }}"></script>
+</body>
+</html>
