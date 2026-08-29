@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import math
 import os
+from bisect import bisect_left
 from datetime import datetime
 from statistics import median
 from typing import Any
@@ -86,19 +87,23 @@ def parse_time(value: str) -> datetime:
 
 
 def event_indices(times: list[str], target: str) -> tuple[datetime, list[int]]:
+    """Return only the nearby hourly samples using the sorted ISO timestamp array."""
     center = parse_time(target)
+    insertion = bisect_left(times, target)
+    start = max(0, insertion - WINDOW_HOURS - 2)
+    end = min(len(times), insertion + WINDOW_HOURS + 2)
     max_diff_seconds = WINDOW_HOURS * 3600
     indices = [
         index
-        for index, time_value in enumerate(times)
-        if abs((parse_time(time_value) - center).total_seconds()) <= max_diff_seconds
+        for index in range(start, end)
+        if abs((parse_time(times[index]) - center).total_seconds()) <= max_diff_seconds
     ]
 
     if indices:
         return center, indices
 
     nearest = min(
-        range(len(times)),
+        range(start, end),
         key=lambda index: abs((parse_time(times[index]) - center).total_seconds()),
     )
     return center, [nearest]
