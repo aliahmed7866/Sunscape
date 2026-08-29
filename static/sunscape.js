@@ -70,7 +70,7 @@ async function loadForecast(place,{boot=false}={}) {
     if(!r.ok) throw new Error(data.error || 'Forecast failed');
     if (!Array.isArray(data.days) || !data.days.length) throw new Error('Forecast returned no days');
     state.days=data.days;
-    state.meta={timezone:data.timezone, timezoneAbbreviation:data.timezoneAbbreviation, elevation:data.elevation, historyDays:data.historyDays, method:data.method};
+    state.meta={timezone:data.timezone, timezoneAbbreviation:data.timezoneAbbreviation, elevation:data.elevation, historyDays:data.historyDays, method:data.method, modelStrategy:data.modelStrategy, build:data.build};
     state.activeDay=0; state.activeEvent='sunset';
     savePlace(place);
     render();
@@ -157,7 +157,7 @@ function render() {
   text('event-time',formatTime(featured.time));
   text('reason',(featured.score.reasons || []).slice(0,2).join(' '));
   text('history-rank',historyText(featured.history));
-  text('history-rank-sub',featured.history?.sampleDays ? `vs ${featured.history.sampleDays} recent local days` : 'historical context unavailable');
+  text('history-rank-sub',featured.history?.sampleDays ? `vs ${featured.history.sampleDays} recent weather-pattern days` : 'historical context unavailable');
   text('confidence',featured.confidence?.label || '—');
   text('confidence-sub',featured.confidence?.detail || '');
   text('daylight',formatDaylight(day.daylightSeconds));
@@ -174,7 +174,18 @@ function render() {
     const value=Number(v)||0;
     return `<div class='cloud-layer'><div class='layer-meta'><span>${n}</span><strong>${Math.round(value)}%</strong></div><div class='layer-track'><span style='width:${Math.max(2,Math.min(100,value))}%'></span></div></div>`;
   }).join('')+`<div class='horizon-marker'><span>HORIZON</span></div>`);
-  html('metrics',metric('Visibility',`${Number(c.visibilityKm||0).toFixed(1)} km`)+metric('Humidity',`${Math.round(Number(c.humidity)||0)}%`)+metric('Precipitation',`${Number(c.precipitation||0).toFixed(1)} mm`));
+
+  const spread=Number(c.dewpointSpread||0);
+  const pressure=Number(c.pressureMsl||0);
+  const wind=Number(c.windSpeed||0);
+  html('metrics',
+    metric('Visibility',`${Number(c.visibilityKm||0).toFixed(1)} km`,'lower-air clarity')+
+    metric('Humidity',`${Math.round(Number(c.humidity)||0)}%`,'surface moisture')+
+    metric('Precipitation',`${Number(c.precipitation||0).toFixed(1)} mm`,'event window')+
+    metric('Dew-point spread',`${spread.toFixed(1)}°C`,spread<=2?'fog/mist risk':'air not saturated')+
+    metric('Pressure',pressure?`${Math.round(pressure)} hPa`:'—','sea-level pressure')+
+    metric('Wind',`${Math.round(wind)} km/h`,'surface flow')
+  );
 
   html('day-strip',state.days.map((d,i)=>{const e=d[state.activeEvent]; if(!e?.score) return ''; return `<button class='day ${i===state.activeDay?'active':''}' data-day='${i}'><span>${formatDay(d.date)}</span><strong>${e.score.score}</strong><span class='mini-track'><i style='width:${Math.max(0,Math.min(100,Number(e.score.score)||0))}%'></i></span><small>${formatTime(e.time)}</small></button>`}).join(''));
   html('forecast-grid',state.days.map(d=>`<article class='forecast-day panel'><div class='forecast-date'><span>${formatDay(d.date)}</span><small>${formatDate(d.date)}</small></div>${compact('☼','Sunrise',d.sunrise)}${compact('◐','Sunset',d.sunset)}</article>`).join(''));
