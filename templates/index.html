@@ -10,17 +10,24 @@
     :root{--ui-line:rgba(240,223,190,.14);--ui-soft:rgba(255,246,226,.055);--ui-soft-2:rgba(255,246,226,.09);--ui-focus:rgba(238,166,92,.24);--sun:#f0a95f;--dawn:#df8d73;--leaf:#7fa07b;--mist:#a7b6a4;--earth:#6d5745}
     html{scroll-behavior:smooth;background:#0a100d}body{min-height:100vh;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;background:radial-gradient(circle at 78% 12%,rgba(238,160,93,.17),transparent 26rem),radial-gradient(circle at 20% 32%,rgba(127,160,123,.10),transparent 24rem),linear-gradient(180deg,#111914 0%,#0c1410 46%,#080d0b 100%)}
     body:after{content:"";position:fixed;z-index:0;inset:auto 0 0;height:34vh;pointer-events:none;opacity:.32;background:linear-gradient(165deg,transparent 0 52%,rgba(39,59,45,.55) 52.2% 60%,transparent 60.2%),linear-gradient(195deg,transparent 0 54%,rgba(29,47,35,.7) 54.2% 67%,transparent 67.2%);mask-image:linear-gradient(to top,#000,transparent)}
-    .shell{position:relative;z-index:1;max-width:1240px;margin:0 auto}.topbar{position:sticky;top:0;z-index:30;margin-inline:calc(clamp(18px,4vw,56px)*-1);padding-inline:clamp(18px,4vw,56px);backdrop-filter:blur(18px) saturate(130%);background:linear-gradient(180deg,rgba(10,16,13,.92),rgba(10,16,13,.68));border-bottom:1px solid var(--ui-line)}.brand{letter-spacing:.14em}.brand-orbit{border-color:var(--sun)!important;box-shadow:0 0 20px rgba(240,169,95,.35)!important}.brand-orbit:after{background:var(--sun)!important}.status-pill{box-shadow:inset 0 0 0 1px rgba(255,255,255,.025)}
+    .shell{position:relative;z-index:1;max-width:1240px;margin:0 auto;transition:opacity .24s ease,transform .24s ease}.boot-screen{position:fixed;z-index:100;inset:0;display:grid;place-items:center;background:radial-gradient(circle at 50% 42%,rgba(238,160,93,.13),transparent 18rem),linear-gradient(180deg,#101713,#080d0b);transition:opacity .24s ease,visibility .24s ease}.boot-card{display:grid;justify-items:center;gap:14px;color:#ede3d3;letter-spacing:.12em;text-align:center}.boot-sun{width:64px;height:64px;border-radius:50%;background:radial-gradient(circle at 36% 32%,#ffe2ae,#efac69 55%,#a35d59 100%);box-shadow:0 0 54px rgba(240,169,95,.24);animation:bootPulse 1.8s ease-in-out infinite}.boot-card strong{font-size:.78rem}.boot-card small{color:#8e9b90;letter-spacing:.06em}.booting .shell{opacity:0;transform:translateY(6px)}body:not(.booting) .boot-screen{opacity:0;visibility:hidden;pointer-events:none}@keyframes bootPulse{50%{transform:scale(1.06);box-shadow:0 0 72px rgba(240,169,95,.32)}}
+    .topbar{position:sticky;top:0;z-index:30;margin-inline:calc(clamp(18px,4vw,56px)*-1);padding-inline:clamp(18px,4vw,56px);backdrop-filter:blur(18px) saturate(130%);background:linear-gradient(180deg,rgba(10,16,13,.92),rgba(10,16,13,.68));border-bottom:1px solid var(--ui-line)}.brand{letter-spacing:.14em}.brand-orbit{border-color:var(--sun)!important;box-shadow:0 0 20px rgba(240,169,95,.35)!important}.brand-orbit:after{background:var(--sun)!important}.status-pill{box-shadow:inset 0 0 0 1px rgba(255,255,255,.025)}
     .hero{min-height:min(760px,78vh);align-items:center}.hero h1{letter-spacing:-.045em;text-wrap:balance}.hero h1 em{background:linear-gradient(90deg,#f7ead7 5%,#f0b36f 45%,#dc8b70 72%,#9fa97a);-webkit-background-clip:text;background-clip:text}.eyebrow{color:#d4b17e!important}.lede{max-width:700px;line-height:1.75;color:#b7c0b6!important}.search{border:1px solid rgba(240,223,190,.16);background:rgba(12,20,16,.82);box-shadow:0 18px 55px rgba(0,0,0,.22);backdrop-filter:blur(12px)}.search:focus-within{border-color:rgba(238,166,92,.48);box-shadow:0 0 0 4px var(--ui-focus),0 22px 60px rgba(0,0,0,.28)}.search input{min-height:54px}.search button{background:linear-gradient(135deg,#f6d39d,#efad68 55%,#dc8b70)!important;color:#2d1e14!important}.search button,.location-button,.event-toggle button{transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease,background .16s ease}.search button:hover,.location-button:hover,.event-toggle button:hover{transform:translateY(-1px)}.search button:active,.location-button:active,.event-toggle button:active{transform:translateY(0)}.location-button{border-color:var(--ui-line);background:var(--ui-soft);color:#d8dfd3}.location-button:hover{background:var(--ui-soft-2);border-color:rgba(240,223,190,.2)}
     .hero-visual{filter:saturate(.9)}.planet{background:radial-gradient(circle at 50% 69%,#f8c47d 0 4%,#e98c69 11%,#a95e63 22%,#4b5f57 43%,#22342b 62%,#101b16 72%)!important;box-shadow:0 0 90px rgba(240,169,95,.14),0 0 0 1px rgba(255,245,226,.08)!important}.planet:after{content:"";position:absolute;left:-8%;right:-8%;bottom:11%;height:33%;background:linear-gradient(155deg,transparent 0 34%,rgba(27,47,34,.98) 35% 53%,transparent 54%),linear-gradient(205deg,transparent 0 42%,rgba(20,39,28,.98) 43% 66%,transparent 67%);filter:drop-shadow(0 -10px 20px rgba(0,0,0,.2))}.horizon-line{background:linear-gradient(90deg,transparent,#ffd4a1,transparent)!important;box-shadow:0 0 18px #eaa56d!important}.radar-ring{border-color:rgba(225,190,142,.14)!important}.telemetry{background:rgba(14,22,17,.84)!important;color:#b6beaf!important;border-color:rgba(240,223,190,.13)!important}
     .panel,.feature-teasers>div{border:1px solid var(--ui-line);box-shadow:inset 0 1px 0 rgba(255,255,255,.025),0 22px 60px rgba(0,0,0,.16);backdrop-filter:blur(14px)}.panel{background:linear-gradient(145deg,rgba(24,34,27,.87),rgba(10,17,13,.78))!important}.panel:hover,.feature-teasers>div:hover{border-color:rgba(240,223,190,.2)}.featured-grid{gap:20px}.day-strip{scrollbar-width:thin;scrollbar-color:rgba(240,223,190,.18) transparent}.forecast-grid{gap:14px}.forecast-day{transition:transform .16s ease,border-color .16s ease,background .16s ease}.forecast-day:hover{transform:translateY(-2px);border-color:rgba(240,223,190,.18)}.score-orb{filter:drop-shadow(0 18px 28px rgba(0,0,0,.22))}.score-progress{stroke:var(--sun)!important;filter:drop-shadow(0 0 8px rgba(240,169,95,.55))!important}.environment-grid>div{background:rgba(255,248,233,.025);border:1px solid rgba(240,223,190,.07);border-radius:14px}.event-toggle button.active{background:rgba(238,166,92,.11)!important}.feature-teasers{gap:16px}.feature-teasers>div{border-radius:18px;background:linear-gradient(180deg,rgba(127,160,123,.07),rgba(255,248,233,.018))}.feature-teasers>div span{color:#d7aa71!important}footer{border-top:1px solid var(--ui-line);padding-top:24px}.error{border:1px solid rgba(255,100,120,.24);background:rgba(255,100,120,.08);border-radius:12px;padding:12px 14px}.search input:focus,.search button:focus-visible,.location-button:focus-visible,.event-toggle button:focus-visible,.day:focus-visible{outline:none;box-shadow:0 0 0 4px var(--ui-focus)}
+    .forecast-context{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%;margin-top:18px}.forecast-context>div{min-width:0;padding:12px;border-radius:14px;background:rgba(255,248,233,.03);border:1px solid rgba(240,223,190,.08)}.forecast-context span{display:block;color:#87958a;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase}.forecast-context strong{display:block;margin-top:5px;color:#f1e4d0;font-size:.9rem}.forecast-context small{display:block;margin-top:3px;color:#7f8d82;font-size:.68rem;line-height:1.35}.metric small{display:block;margin-top:3px;color:#7f8d82;font-size:.68rem}
+    .method-note{margin-top:12px;color:#77877b;font-size:.72rem;line-height:1.5}.method-note strong{color:#aeb9ae;font-weight:600}
     @media(max-width:860px){.topbar{position:relative;margin-inline:0;padding-inline:0;background:transparent;border:0;backdrop-filter:none}.hero{min-height:auto;padding-top:48px}.hero-copy{max-width:none}.hero-visual{opacity:.72}.featured-grid{grid-template-columns:1fr}.feature-teasers{grid-template-columns:1fr}.dashboard{padding-top:28px}}
-    @media(max-width:620px){.shell{padding-inline:16px}.topbar{padding-top:14px}.status-pill{font-size:.64rem}.hero{padding-top:34px}.hero h1{font-size:clamp(2.7rem,15vw,4.8rem)}.search{padding:6px}.search input{min-width:0}.search button{padding-inline:14px}.section-head{align-items:flex-start}.event-toggle{width:100%}.event-toggle button{flex:1}.panel{border-radius:18px}.hero-score,.atmosphere-panel,.timeline{padding:18px}.forecast-grid{grid-template-columns:1fr 1fr}.feature-teasers>div{padding:18px}}
-    @media(max-width:420px){.forecast-grid{grid-template-columns:1fr}.status-pill{display:none}}
+    @media(max-width:620px){.shell{padding-inline:16px}.topbar{padding-top:14px}.status-pill{font-size:.64rem}.hero{padding-top:34px}.hero h1{font-size:clamp(2.7rem,15vw,4.8rem)}.search{padding:6px}.search input{min-width:0}.search button{padding-inline:14px}.section-head{align-items:flex-start}.event-toggle{width:100%}.event-toggle button{flex:1}.panel{border-radius:18px}.hero-score,.atmosphere-panel,.timeline{padding:18px}.forecast-grid{grid-template-columns:1fr 1fr}.feature-teasers>div{padding:18px}.forecast-context{grid-template-columns:1fr 1fr}.forecast-context>div:last-child{grid-column:1/-1}}
+    @media(max-width:420px){.forecast-grid{grid-template-columns:1fr}.status-pill{display:none}.forecast-context{grid-template-columns:1fr}.forecast-context>div:last-child{grid-column:auto}}
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
   </style>
+  <noscript><style>.boot-screen{display:none!important}.booting .shell{opacity:1!important;transform:none!important}</style></noscript>
 </head>
-<body class="landing">
+<body class="landing booting">
+  <div class="boot-screen" id="boot-screen" role="status" aria-live="polite">
+    <div class="boot-card"><div class="boot-sun"></div><strong>SUNSCAPE</strong><small>Preparing your light forecast</small></div>
+  </div>
   <main class="shell">
     <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
     <header class="topbar"><div class="brand"><span class="brand-orbit"></span>SUNSCAPE</div><div class="status-pill"><span></span> LIVE SKY & WEATHER</div></header>
@@ -28,7 +35,7 @@
       <div class="hero-copy">
         <p class="eyebrow">SUNRISE · SUNSET · WEATHER</p>
         <h1>Find the moments when nature <em>lights up.</em></h1>
-        <p class="lede">A calm, nature-first forecast for sunrise and sunset potential using cloud layers, visibility, humidity and precipitation.</p>
+        <p class="lede">A calm, nature-first forecast for sunrise and sunset potential using cloud layers, visibility, humidity, precipitation and recent local sky history.</p>
         <form class="search" id="search-form">
           <span class="search-icon">⌖</span>
           <input id="query" placeholder="Search city, coast or postcode" aria-label="Search city or postcode" autocomplete="off">
@@ -57,12 +64,19 @@
             <svg viewBox="0 0 140 140"><circle class="score-track" cx="70" cy="70" r="58"></circle><circle id="score-progress" class="score-progress" cx="70" cy="70" r="58"></circle></svg>
             <div class="score-core"><strong id="score-value">0</strong><span>/100</span><small id="score-label"></small></div>
           </div>
-          <div class="event-time" id="event-time"></div><p class="reason" id="reason"></p><div class="signal-row"><span class="signal-dot"></span> Forecast signal acquired</div>
+          <div class="event-time" id="event-time"></div><p class="reason" id="reason"></p>
+          <div class="forecast-context">
+            <div><span>Historical rank</span><strong id="history-rank">—</strong><small id="history-rank-sub">recent local comparison</small></div>
+            <div><span>Forecast confidence</span><strong id="confidence">—</strong><small id="confidence-sub">model horizon</small></div>
+            <div><span>Daylight</span><strong id="daylight">—</strong><small>astronomical day length</small></div>
+          </div>
+          <div class="signal-row"><span class="signal-dot"></span> Forecast signal acquired</div>
         </article>
         <article class="panel atmosphere-panel">
-          <div class="panel-head"><span>SKY & ATMOSPHERE</span><small>cloud layers</small></div>
+          <div class="panel-head"><span>SKY & ATMOSPHERE</span><small>phase-weighted cloud layers</small></div>
           <div class="cloud-profile" id="cloud-profile"></div>
           <div class="environment-grid" id="metrics"></div>
+          <p class="method-note"><strong>How it works:</strong> low cloud is weighted most at the horizon; mid/high cloud is weighted before sunrise and after sunset, when it can catch low-angle colour.</p>
         </article>
       </div>
       <div class="timeline panel"><div class="panel-head"><span>WEEK AHEAD</span><small>tap a day to inspect</small></div><div class="day-strip" id="day-strip"></div></div>
@@ -70,11 +84,11 @@
     </section>
 
     <section class="feature-teasers" id="teasers">
-      <div><span>01</span><strong>Golden-hour cloud layers</strong><p>Low, mid and high cloud are treated differently to estimate colour and texture near the horizon.</p></div>
-      <div><span>02</span><strong>Clear-air signal</strong><p>Visibility and moisture help estimate whether warm light can travel cleanly through the atmosphere.</p></div>
-      <div><span>03</span><strong>Dawn-to-dusk outlook</strong><p>Compare the next seven sunrises and sunsets before choosing when to head outside.</p></div>
+      <div><span>01</span><strong>Phase-aware cloud layers</strong><p>Low, mid and high cloud are weighted differently around the exact sunrise or sunset phase rather than averaged into one generic window.</p></div>
+      <div><span>02</span><strong>Local historical context</strong><p>Each forecast is compared with recent local sunrise and sunset conditions so an unusually promising sky stands out.</p></div>
+      <div><span>03</span><strong>Correct local solar time</strong><p>Sunrise and sunset are displayed in the searched location’s own timezone instead of being shifted into your device timezone.</p></div>
     </section>
-    <footer><span>SUNSCAPE / LIGHT & WEATHER</span><span>Powered by Open-Meteo · Predictions are heuristic</span></footer>
+    <footer><span>SUNSCAPE / LIGHT & WEATHER</span><span>Open-Meteo weather & solar data · NOAA-informed heuristic · visible horizon and refraction can vary</span></footer>
   </main>
   <script src="{{ url_for('static', filename='sunscape.js') }}"></script>
 </body>
