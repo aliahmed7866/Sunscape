@@ -8,28 +8,29 @@ function formatDay(value) { return new Date(`${value}T12:00:00`).toLocaleDateStr
 function formatDate(value) { return new Date(`${value}T12:00:00`).toLocaleDateString(undefined,{month:'short',day:'numeric'}); }
 function showError(message='') { const el=$('error'); el.textContent=message; el.hidden=!message; }
 function setLocationBusy(busy,label='Use my location') { const b=$('location-button'); b.disabled=busy; $('location-label').textContent=busy?'Detecting location…':label; }
+function setSearchBusy(busy) { $('search-button').disabled=busy; $('search-button').textContent=busy?'READING SKY':'READ THE SKY'; }
 
 async function searchPlaces(event) {
   event.preventDefault();
   const query=$('query').value.trim(); if(query.length<2) return;
-  showError(); $('search-button').disabled=true; $('search-button').textContent='SCANNING';
+  showError(); setSearchBusy(true);
   try {
     const r=await fetch(`/api/search?q=${encodeURIComponent(query)}`); const data=await r.json();
     if(!r.ok) throw new Error(data.error || 'Search failed');
     const box=$('results'); box.innerHTML=(data.results||[]).map((p,i)=>`<button data-place='${i}'><span><strong>${esc(p.name)}</strong><small>${esc([p.admin1,p.country].filter(Boolean).join(', '))}</small></span><b>→</b></button>`).join('');
     box.hidden=!(data.results||[]).length; box._places=data.results||[];
   } catch(e){ showError(e.message||'Search failed'); }
-  finally { $('search-button').disabled=false; $('search-button').textContent='SCAN SKY'; }
+  finally { setSearchBusy(false); }
 }
 
 async function loadForecast(place) {
-  state.place=place; $('results').hidden=true; showError(); $('search-button').disabled=true; $('search-button').textContent='SCANNING';
+  state.place=place; $('results').hidden=true; showError(); setSearchBusy(true);
   try {
     const r=await fetch(`/api/forecast?lat=${encodeURIComponent(place.latitude)}&lon=${encodeURIComponent(place.longitude)}`); const data=await r.json();
     if(!r.ok) throw new Error(data.error || 'Forecast failed');
     state.days=data.days||[]; state.activeDay=0; state.activeEvent='sunset'; render();
   } catch(e){ showError(e.message||'Forecast failed'); }
-  finally { $('search-button').disabled=false; $('search-button').textContent='SCAN SKY'; }
+  finally { setSearchBusy(false); }
 }
 
 function detectLocation({silent=false}={}) {
