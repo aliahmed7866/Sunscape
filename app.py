@@ -16,8 +16,25 @@ WINDOW_HOURS = 3
 HISTORY_DAYS = 60
 FORECAST_DAYS = 7
 HTTP_TIMEOUT = 15
+APP_BUILD = "2026.08.29.3"
 OPEN_METEO_GEOCODING_URL = "https://geocoding-api.open-meteo.com/v1/search"
 OPEN_METEO_FORECAST_URL = "https://api.open-meteo.com/v1/forecast"
+
+
+@app.after_request
+def prevent_mixed_asset_versions(response):
+    """Keep the local app from mixing cached HTML/JS across deployments.
+
+    Sunscape is a localhost application updated in place, so freshness is more
+    important than browser caching. A stale template with newer JavaScript can
+    otherwise cause a partial dashboard render after an update.
+    """
+    if request.path == "/" or request.path.startswith("/static/") or request.path.startswith("/api/"):
+        response.headers["Cache-Control"] = "no-store, max-age=0"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
+    response.headers["X-Sunscape-Build"] = APP_BUILD
+    return response
 
 
 def bell(value: float, ideal: float, width: float) -> float:
@@ -178,9 +195,7 @@ def make_event(forecast: dict[str, Any], day_index: int, event_type: str) -> dic
         return phase_weighted_average(forecast["hourly"][key], indices, center, times, offset, width)
 
     conditions = {
-        # Horizon-blocking cloud matters most right at the event.
         "lowCloud": avg("cloud_cover_low", 0.0, 1.25),
-        # Mid/high cloud catches colour slightly after sunset and before sunrise.
         "midCloud": avg("cloud_cover_mid", 0.35 * direction, 1.75),
         "highCloud": avg("cloud_cover_high", 0.75 * direction, 2.1),
         "precipitation": avg("precipitation", 0.0, 1.5),
@@ -226,7 +241,7 @@ def index():
 
 @app.get("/health")
 def health():
-    return jsonify({"status": "ok", "service": "sunscape", "port": int(os.environ.get("PORT", "8081"))})
+    return jsonify({"status": "ok", "service": "sunscape", "port": int(os.environ.get("PORT", "8081")), "build": APP_BUILD})
 
 
 @app.get("/api/search")
@@ -292,6 +307,7 @@ def api_forecast():
                 "historyDays": future_start,
                 "days": days,
                 "method": "phase-weighted cloud layers + visibility/humidity + recent local historical context",
+                "build": APP_BUILD,
             }
         )
     except (requests.RequestException, KeyError, IndexError, ValueError):
