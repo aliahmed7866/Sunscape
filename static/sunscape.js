@@ -159,20 +159,16 @@ async function init() {
   const saved = getSavedPlace();
   if (saved) {
     $('query').value=saved.name || '';
-    await loadForecast(saved,{boot:true});
-    return;
+    const loaded = await loadForecast(saved,{boot:true});
+    if (loaded) return;
+    document.body.classList.add('booting');
   }
 
-  if (navigator.permissions?.query) {
-    try {
-      const permission = await navigator.permissions.query({name:'geolocation'});
-      if (permission.state === 'granted') {
-        await detectLocation({silent:true,boot:true});
-        return;
-      }
-    } catch (_) {}
-  }
-  finishBoot();
+  // Restore the original automatic dashboard behaviour, but keep it behind
+  // the boot screen so location/forecast loading no longer causes a UI flash.
+  // If permission is denied or location fails, detectLocation cleanly reveals
+  // the landing/search UI instead.
+  await detectLocation({silent:true,boot:true});
 }
 
 document.addEventListener('DOMContentLoaded',init);
