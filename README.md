@@ -50,3 +50,9 @@ Weather forecasts and location search are provided by Open-Meteo. Review Open-Me
 ## Disclaimer
 
 Sunscape scores estimate photographic potential from forecast conditions. Weather forecasts change and a high score is not a guarantee of a colourful sky.
+
+## Install as a phone app
+
+Keep Sunscape running in Termux, open its local URL in Chrome, then use the in-app **Install app** button (or Chrome's **Install app / Add to Home screen** menu). The installed icon opens Sunscape in its own app window.
+
+The Flask service, local data and auto-deploy process are unchanged. If the service is stopped, the installed app shows a short offline message directing you to start Sunscape from the Admin Hub; live weather and planning responses are not cached as stale data.
