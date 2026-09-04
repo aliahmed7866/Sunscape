@@ -2,7 +2,7 @@
   "name": "Sunscape",
   "short_name": "Sunscape",
   "description": "Local sunrise and sunset quality forecasts.",
-  "id": "/",
+  "id": "/sunscape-app",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
