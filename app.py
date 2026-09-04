@@ -282,6 +282,15 @@ def index():
     return render_template("index.html")
 
 
+@app.get("/service-worker.js")
+def service_worker():
+    response = app.send_static_file("service-worker.js")
+    response.headers["Content-Type"] = "application/javascript"
+    response.headers["Cache-Control"] = "no-cache"
+    response.headers["Service-Worker-Allowed"] = "/"
+    return response
+
+
 @app.get("/health")
 def health():
     return jsonify({"status": "ok", "service": "sunscape", "port": int(os.environ.get("PORT", "8081")), "build": APP_BUILD})
