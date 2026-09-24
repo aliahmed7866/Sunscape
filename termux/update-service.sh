@@ -1,24 +1,11 @@
 #!/data/data/com.termux/files/usr/bin/bash
 set -euo pipefail
-
 APP_DIR="${SUNSCAPE_APP_DIR:-$HOME/sunscape}"
 BRANCH="${SUNSCAPE_BRANCH:-main}"
-PORT="${SUNSCAPE_PORT:-8081}"
-
 cd "$APP_DIR"
-
-echo "[Sunscape] Updating from origin/$BRANCH..."
+[ -z "$(git status --porcelain)" ] || { echo 'Sunscape has local changes; preserve them before updating.' >&2; exit 1; }
 git fetch origin "$BRANCH"
-git checkout "$BRANCH"
-git pull --ff-only origin "$BRANCH"
-
-if [ ! -d .venv ]; then
-  python -m venv .venv
-fi
-
-.venv/bin/pip install -r requirements.txt
-sv restart sunscape
-sleep 1
-curl -fsS "http://127.0.0.1:$PORT/health"
-echo
-echo "[Sunscape] Update complete."
+[ "$(git branch --show-current)" = "$BRANCH" ] || { echo "Expected branch $BRANCH; checkout was preserved." >&2; exit 1; }
+git merge --ff-only "origin/$BRANCH"
+# Reuse saved endpoint and repair missing supervision on every update.
+exec bash termux/install-service.sh

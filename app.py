@@ -293,7 +293,7 @@ def service_worker():
 
 @app.get("/health")
 def health():
-    return jsonify({"status": "ok", "service": "sunscape", "port": int(os.environ.get("PORT", "8081")), "build": APP_BUILD})
+    return jsonify({"status": "ok", "service": "sunscape", "port": int(os.environ.get("PORT", "8091")), "build": APP_BUILD})
 
 
 @app.get("/api/search")
@@ -363,5 +363,5 @@ def api_forecast():
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", "8081"))
+    port = int(os.environ.get("PORT", "8091"))
     app.run(host=os.environ.get("HOST", "127.0.0.1"), port=port, debug=os.environ.get("FLASK_DEBUG") == "1")
