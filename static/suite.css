@@ -1,0 +1,36 @@
+/* Shared interaction refinements; each app keeps its own palette and layout. */
+html { -webkit-text-size-adjust: 100%; scroll-padding-block: 90px; }
+body { -webkit-font-smoothing: antialiased; }
+:where(button, a, input, select, textarea, summary):focus-visible {
+  outline: 3px solid var(--focus-ring, #9bded6); outline-offset: 3px;
+}
+:where(input, select, textarea) { scroll-margin-block: 100px; }
+:where(button, .button, .primary, .secondary) { touch-action: manipulation; }
+:where(button, input, select, textarea):disabled { cursor: not-allowed; }
+:where(h1, h2, h3) { text-wrap: balance; }
+:where(p, dd) { overflow-wrap: anywhere; }
+:where(table, .metric-value, .metrics strong) { font-variant-numeric: tabular-nums; }
+@media (max-width: 700px) {
+  input:not([type=checkbox]):not([type=radio]), select, textarea { font-size: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
+
+:root { --focus-ring: #ffd29c; }
+.search { border-color: #8e7856; box-shadow: 0 12px 32px #0003; }
+.search input::placeholder { color: #bac2b5; }
+.search button, .location-button, .event-toggle button, .day { min-height: 46px; }
+.forecast-day { border-color: #52604b; }
+.method-note, .forecast-context small, .metric small { color: #b2bead; }
+.forecast-context span { color: #c4cbbf; }
+.section-head { gap: 16px; flex-wrap: wrap; }
+.panel h2 { line-height: 1.35; }
+@media(max-width:620px) {
+ .hero { padding-bottom: 24px; }
+ .hero-visual { display: none; }
+ .search { width: 100%; }
+ .forecast-context { gap: 12px; }
+ .day-strip { padding-bottom: 10px; scroll-snap-type: x proximity; }
+ .day { scroll-snap-align: start; }
+}

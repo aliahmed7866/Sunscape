@@ -24,3 +24,9 @@ pnpm-debug.log*
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+# Flask / Termux runtime
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/

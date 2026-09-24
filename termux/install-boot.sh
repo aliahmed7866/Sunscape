@@ -9,10 +9,12 @@ cat > "$BOOT_SCRIPT" <<'EOF'
 #!/data/data/com.termux/files/usr/bin/bash
 termux-wake-lock >/dev/null 2>&1 || true
 
-if ! pgrep -f "runsvdir.*var/service" >/dev/null 2>&1; then
-  runsvdir-start >/dev/null 2>&1 &
-  sleep 2
-fi
+export SVDIR="$PREFIX/var/service"
+[ ! -f "$PREFIX/etc/profile.d/start-services.sh" ] || . "$PREFIX/etc/profile.d/start-services.sh"
+for attempt in {1..20}; do
+  [ ! -p "$SVDIR/sunscape/supervise/ok" ] || break
+  sleep 1
+done
 
 sv up sunscape >/dev/null 2>&1 || true
 EOF

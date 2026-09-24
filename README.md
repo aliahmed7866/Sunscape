@@ -56,3 +56,15 @@ Sunscape scores estimate photographic potential from forecast conditions. Weathe
 Keep Sunscape running in Termux, open its local URL in Chrome, then use the in-app **Install app** button (or Chrome's **Install app / Add to Home screen** menu). The installed icon opens Sunscape in its own app window.
 
 The Flask service, local data and auto-deploy process are unchanged. If the service is stopped, the installed app shows a short offline message directing you to start Sunscape from the Admin Hub; live weather and planning responses are not cached as stale data.
+
+### Repair Termux service setup or an occupied port
+
+From the Sunscape checkout, run `bash termux/install-service.sh`.
+Setup starts Termux's service supervisor in the current session, waits for
+`runsv`, restarts Sunscape and verifies that `/health` identifies Sunscape.
+New installations try port **8091**, then free ports through 8100. The chosen
+endpoint is saved in `~/.config/sunscape/service.json` and the Admin Hub registry;
+updates reuse it. Other apps and their occupied ports are left running.
+To choose a specific port, run `SUNSCAPE_PORT=8095 bash termux/install-service.sh`.
+An occupied or reserved explicit port fails before the service is changed.
+If supervision still fails, open a fresh Termux session and rerun setup.
