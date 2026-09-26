@@ -34,3 +34,20 @@ body { -webkit-font-smoothing: antialiased; }
  .day-strip { padding-bottom: 10px; scroll-snap-type: x proximity; }
  .day { scroll-snap-align: start; }
 }
+
+/* Results participate in layout so the forecast never paints over the choices. */
+.results {
+ position: relative; z-index: auto; width: 100%; margin-top: 12px;
+ max-height: min(24rem, 45dvh); overflow-y: auto; overscroll-behavior: contain;
+ background: #101914; border-color: #52604b; backdrop-filter: none;
+ scrollbar-gutter: stable;
+}
+.results button { min-height: 52px; width: 100%; cursor: pointer; }
+.results button > span { min-width: 0; overflow-wrap: anywhere; }
+.results button > b { flex-shrink: 0; }
+.results small { color: #b2bead; }
+.search-status { color: #c4cbbf; margin: 12px 0 0; font-size: .85rem; }
+/* A mobile landing screen must expand when a results list is opened. */
+.landing.search-open { overflow-y: auto; }
+.landing.search-open .shell { height: auto; overflow: visible; }
+.landing.search-open .hero { height: auto; min-height: 0; }

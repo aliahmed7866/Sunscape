@@ -28,7 +28,7 @@
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
   </style>
   <noscript><style>.boot-screen{display:none!important}.booting .shell{opacity:1!important;transform:none!important}</style></noscript>
-  <link rel="stylesheet" href="{{ url_for('static', filename='suite.css', v='20260924') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='suite.css', v='20260926-search') }}">
 </head>
 <body class="landing booting">
   <div class="boot-screen" id="boot-screen" role="status" aria-live="polite">
@@ -42,14 +42,15 @@
         <p class="eyebrow">SUNRISE · SUNSET · WEATHER</p>
         <h1>Find the moments when nature <em>lights up.</em></h1>
         <p class="lede">A calm, nature-first forecast for sunrise and sunset potential using cloud layers, visibility, humidity, precipitation and recent local sky history.</p>
-        <form class="search" id="search-form">
+        <form class="search" id="search-form" role="search">
           <span class="search-icon">⌖</span>
           <input id="query" placeholder="Search city, coast or postcode" aria-label="Search city or postcode" autocomplete="off">
-          <button id="search-button">READ THE SKY</button>
+          <button id="search-button" aria-controls="results" aria-expanded="false">READ THE SKY</button>
         </form>
         <button class="location-button" id="location-button" type="button"><span>◎</span><span id="location-label">Use my location</span></button>
         <p class="error" id="error" hidden></p>
-        <div class="results" id="results" hidden></div>
+        <p class="search-status" id="search-status" role="status" hidden></p>
+        <div class="results" id="results" role="group" aria-label="Matching locations" hidden></div>
       </div>
       <div class="hero-visual" aria-hidden="true">
         <div class="planet"><div class="planet-glow"></div><div class="horizon-line"></div><span class="star s1"></span><span class="star s2"></span><span class="star s3"></span></div>
@@ -96,7 +97,7 @@
     </section>
     <footer><span>SUNSCAPE / LIGHT & WEATHER</span><span>Open-Meteo weather & solar data · NOAA-informed heuristic · visible horizon and refraction can vary</span></footer>
   </main>
-  <script src="{{ url_for('static', filename='sunscape.js') }}"></script>
+  <script src="{{ url_for('static', filename='sunscape.js', v='20260926-search') }}"></script>
   <script src="{{ url_for('static', filename='pwa.js') }}" defer></script>
 </body>
 </html>

@@ -46,29 +46,64 @@ function getSavedPlace() {
   } catch (_) { return null; }
 }
 
+let searchRequest = null;
+let searchVersion = 0;
+
+function closeResults() {
+  searchVersion++;
+  if (searchRequest) {
+    searchRequest.abort();
+    searchRequest = null;
+    setSearchBusy(false);
+  }
+  hidden('results', true);
+  hidden('search-status', true);
+  document.body.classList.remove('search-open');
+  $('search-button')?.setAttribute('aria-expanded', 'false');
+  const box = $('results');
+  if (box) { box.innerHTML = ''; box._places = []; }
+}
+
 async function searchPlaces(event) {
   event.preventDefault();
-  const query=$('query')?.value.trim() || ''; if(query.length<2) return;
+  closeResults();
+  const query=$('query')?.value.trim() || '';
+  if(query.length<2) { showError('Enter at least two characters to search.'); return; }
+  const version = searchVersion;
+  const controller = new AbortController();
+  searchRequest = controller;
   showError(); setSearchBusy(true);
   try {
-    const r=await fetch(`/api/search?q=${encodeURIComponent(query)}`, {cache:'no-store'}); const data=await r.json();
+    const r=await fetch(`/api/search?q=${encodeURIComponent(query)}`, {cache:'no-store', signal:controller.signal});
+    const data=await r.json();
+    if (version !== searchVersion) return;
     if(!r.ok) throw new Error(data.error || 'Search failed');
+    const places = Array.isArray(data.results) ? data.results : [];
     const box=$('results');
     if (box) {
-      box.innerHTML=(data.results||[]).map((p,i)=>`<button type='button' data-place='${i}'><span><strong>${esc(p.name)}</strong><small>${esc([p.admin1,p.country].filter(Boolean).join(', '))}</small></span><b>→</b></button>`).join('');
-      box.hidden=!(data.results||[]).length; box._places=data.results||[];
+      box.innerHTML=places.map((p,i)=>`<button type='button' data-place='${i}'><span><strong>${esc(p.name)}</strong><small>${esc([p.admin1,p.country].filter(Boolean).join(', '))}</small></span><b aria-hidden='true'>→</b></button>`).join('');
+      box.hidden=!places.length; box._places=places;
     }
-  } catch(e){ showError(e.message||'Search failed'); }
-  finally { setSearchBusy(false); }
+    text('search-status', places.length ? `${places.length} matching locations. Choose one to update the forecast.` : 'No matching locations. Try a nearby city or a different spelling.');
+    hidden('search-status', false);
+    document.body.classList.add('search-open');
+    $('search-button')?.setAttribute('aria-expanded', String(Boolean(places.length)));
+  } catch(e){
+    if (version === searchVersion && e.name !== 'AbortError') showError(e.message||'Search failed');
+  } finally {
+    if (version === searchVersion) { searchRequest = null; setSearchBusy(false); }
+  }
 }
 
 async function loadForecast(place,{boot=false}={}) {
-  state.place=place; hidden('results',true); showError(); setSearchBusy(true);
+  closeResults(); showError(); setSearchBusy(true);
   try {
     const elevation = Number.isFinite(Number(place.elevation)) ? `&elevation=${encodeURIComponent(place.elevation)}` : '';
     const r=await fetch(`/api/forecast?lat=${encodeURIComponent(place.latitude)}&lon=${encodeURIComponent(place.longitude)}${elevation}`, {cache:'no-store'}); const data=await r.json();
     if(!r.ok) throw new Error(data.error || 'Forecast failed');
     if (!Array.isArray(data.days) || !data.days.length) throw new Error('Forecast returned no days');
+    state.place=place;
+    if ($('query')) $('query').value = place.name || '';
     state.days=data.days;
     state.meta={timezone:data.timezone, timezoneAbbreviation:data.timezoneAbbreviation, elevation:data.elevation, historyDays:data.historyDays, method:data.method, modelStrategy:data.modelStrategy, build:data.build};
     state.activeDay=0; state.activeEvent='sunset';
@@ -197,7 +232,19 @@ function compact(icon,title,f){
 
 async function init() {
   $('search-form')?.addEventListener('submit',searchPlaces);
-  $('location-button')?.addEventListener('click',()=>detectLocation({silent:false}));
+  $('location-button')?.addEventListener('click',()=>{closeResults(); detectLocation({silent:false});});
+  $('query')?.addEventListener('input', closeResults);
+  document.addEventListener('pointerdown', e => {
+    if (!e.target.closest('#search-form, #results, #search-status')) closeResults();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && (document.body.classList.contains('search-open') || searchRequest)) {
+      closeResults(); $('query')?.focus();
+    }
+    if (e.key === 'ArrowDown' && e.target === $('query') && !$('results')?.hidden) {
+      e.preventDefault(); $('results')?.querySelector('button')?.focus();
+    }
+  });
   $('results')?.addEventListener('click',e=>{const b=e.target.closest('[data-place]'); const box=$('results'); if(b && box?._places) loadForecast(box._places[Number(b.dataset.place)]);});
   document.querySelector('.event-toggle')?.addEventListener('click',e=>{const b=e.target.closest('[data-event]'); if(b){state.activeEvent=b.dataset.event; render();}});
   $('day-strip')?.addEventListener('click',e=>{const b=e.target.closest('[data-day]'); if(b){state.activeDay=Number(b.dataset.day); render();}});
